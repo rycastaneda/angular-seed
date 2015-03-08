@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-ng-app="app">
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
@@ -7,15 +7,31 @@
     <link rel="stylesheet" href="/build/css/vendor.min.css">
     <!-- endinject -->
 
+    <style>
+        /* This helps the ng-show/ng-hide animations start at the right place. */
+        /* Since Angular has this but needs to load, this gives us the class early. */
+        .ng-hide {
+            display: none!important;
+        }
+    </style>
 
     <!-- inject:css -->
     <link rel="stylesheet" href="/build/css/styles.min.css">
     <!-- endinject -->
 </head>
 <body>
-    <div class="home">
-        <h1 class="title">WELCOME asdasdasd asdada asdasdasdsd</h1>
-        <input type="text">
+    <div>
+        <div data-ng-include="'layout/layout.tpl.html'"></div>
+        <div id="splash-page" data-ng-show="false">
+            <div class="page-splash">
+                <div class="page-splash-message">
+                    Angular Modular Demo
+                </div>
+                <div class="progress progress-striped active page-progress-bar">
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
     <!-- inject-vendor:js -->

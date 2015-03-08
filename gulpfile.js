@@ -1,4 +1,4 @@
-'use strict'; //todo: css should be build on .css and .min.css; check filesize; findout why 2 css task is called;
+'use strict';
 var config      = require('./gulp.config.json'),
     gulp        = require('gulp'),
     // gutil       = require('gulp-util'),
@@ -8,6 +8,7 @@ var config      = require('./gulp.config.json'),
     minifycss   = require('gulp-minify-css'),
     jshint      = require('gulp-jshint'),
     ngAnnotate  = require('gulp-ng-annotate'),
+    html2js     = require('gulp-html2js'),
     uglify      = require('gulp-uglify'),
     sourcemaps  = require('gulp-sourcemaps'),
     filesize    = require('gulp-filesize'),
@@ -23,20 +24,24 @@ var config      = require('./gulp.config.json'),
     gulp.task('vendorcss', function() {
         return gulp.src(config.vendorcss)
             .pipe(concat('vendor.css'))
+            .pipe(sourcemaps.init())
             .pipe(filesize())
             .pipe(minifycss())
             .pipe(filesize())
             .pipe(rename('vendor.min.css'))
+            .pipe(sourcemaps.write('../maps'))
             .pipe(gulp.dest('build/css'));
     });
 
     gulp.task('vendorjs', function() {
         return gulp.src(config.vendorjs)
             .pipe(concat('vendor.js'))
+            .pipe(sourcemaps.init())
             .pipe(filesize())
-            .pipe(minifycss())
+            .pipe(uglify())
             .pipe(filesize())
             .pipe(rename('vendor.min.js'))
+            .pipe(sourcemaps.write('../maps'))
             .pipe(gulp.dest('build/js'));
     });
 
@@ -77,6 +82,13 @@ var config      = require('./gulp.config.json'),
             .pipe(notify({ message: 'Sass Styles task complete' }));
     });
 
+    gulp.task('templates', function() {
+      gulp.src(config.htmltemplates)
+        .pipe(html2js())
+        .pipe(concat('templates.js'))
+        .pipe(gulp.dest('build/js'));
+    })
+
 
     gulp.task('inject', function() {
         return gulp.src(config.index)
@@ -96,15 +108,22 @@ var config      = require('./gulp.config.json'),
             .pipe(gulp.dest('build'));
     });
 
-    gulp.task('serve-dev', ['sass', 'js', 'vendorcss', 'vendorjs', 'inject'], function() {
+    gulp.task('serve-dev', ['sass', 'js', 'templates', 'vendorcss', 'vendorjs', 'inject'], function() {
         env = 'development';
 
         serve({
             mode: env
         });
 
-        gulp.watch(config.css, ['sass',reload]);
-        gulp.watch(config.js, ['js',reload]);
+        gulp.watch(config.allcss, ['sass',reload]).on('change',function() {
+            notify({message:'Changed'})
+        });
+        gulp.watch(config.js, ['js',reload]).on('change',function() {
+            notify({message:'Changed'})
+        });
+        gulp.watch(config.htmltemplates, ['templates','js',reload]).on('change',function() {
+            notify({message:'Changed'})
+        });
         gulp.watch(config.html).on('change', reload);
 
     });

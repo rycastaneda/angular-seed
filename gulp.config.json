@@ -4,11 +4,12 @@
   "test": "./src/client/test/",
   "html": "./src/client/**/*.html",
   "index" : "./index.html",
-  "htmltemplates": "./src/client/app/**/*.html",
+  "htmltemplates": "./src/client/**/*.tpl.html",
   "vendorjs": [
     "./vendor/angular/angular.min.js",
     "./vendor/angular-animate/angular-animate.min.js",
-    "./vendor/bootstrap/dist/js/bootstrap.min.js",
+    "./vendor/angular-bootstrap/ui-bootstrap.min.js",
+    "./vendor/angular-moment/angular-moment.min.js",
     "./vendor/moment/min/moment.min.js"
   ],
   "vendorcss": [
@@ -26,7 +27,8 @@
     "./src/client/content/*.sass"
   ],
   "js": [
-    "./src/client/**/*.js"
+    "./src/client/**/*.js",
+    "./build/js/templates.js"
   ],
   "specs": [
     "./src/client/test/specs/*.spec.js"
